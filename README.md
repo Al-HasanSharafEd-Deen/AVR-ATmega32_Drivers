@@ -1,5 +1,5 @@
 # AVR ATmega32 Drivers
-This my implementation to AVR ATmega32 peripherals and some important HW components Drivers.
+This is my implementation to AVR ATmega32 peripherals and some important HW components Drivers.
 I wrote and organized it using Layerd Architecture.
 
 ---------------------------------------------------------------------------------------------
