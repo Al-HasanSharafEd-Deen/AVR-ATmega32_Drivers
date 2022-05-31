@@ -16,6 +16,7 @@ In this folder you will find peripherals' drivers implementation.
 In this folder you will find HW components' drivers implementation.
 1. SSD -seven segmant display-
 2. LCD -character LCD display-
+3. KPD -keypad 16 x 16-
 
 ## LIB
 ### Library
