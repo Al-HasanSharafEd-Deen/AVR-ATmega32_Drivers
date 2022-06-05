@@ -6,8 +6,7 @@
 /*******************************************************************************/
 /*******************************************************************************/
 
-
-/*******************************************************************************/
+/**********************************************************************************************************/
 #include "STD_TYPES.h"
 #include "BIT_MATH.h"
 
@@ -17,8 +16,7 @@
 #include "LCD_interface.h"
 #include "LCD_private.h"
 #include "LCD_config.h"
-/*******************************************************************************/
-
+/**********************************************************************************************************/
 
 
 /* send command Function
@@ -27,6 +25,8 @@
  */
 void LCD_voidSendCommand(u8 Copy_u8Command)
 {
+	/*8bit mode*/
+#if LCD_MODE == LCD_8BitMode
 	/*RS==0 (low) for command*/
 	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_RS_PIN, DIO_u8PIN_LOW);
 	/*RW==0 (low) for Write*/
@@ -35,9 +35,38 @@ void LCD_voidSendCommand(u8 Copy_u8Command)
 	DIO_u8SetPortValue(LCD_DATA_PORT, Copy_u8Command);
 	/*enable pulse*/
 	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_HIGH);
-	_delay_ms(1);
+	_delay_ms(2);
 	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_LOW);
-	_delay_ms(1);
+	_delay_ms(2);
+
+	/*4bit mode*/
+#elif LCD_MODE == LCD_4BitMode
+	/*RS==0 (low) for command*/
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_RS_PIN, DIO_u8PIN_LOW);
+	/*RW==0 (low) for Write*/
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_RW_PIN, DIO_u8PIN_LOW);
+	/*higher command*/
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN7,GETBIT(Copy_u8Command,7));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN6,GETBIT(Copy_u8Command,6));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN5,GETBIT(Copy_u8Command,5));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN4,GETBIT(Copy_u8Command,4));
+	/*enable pulse*/
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_HIGH);
+	_delay_ms(2);
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_LOW);
+	_delay_ms(2);
+	/*lower command*/
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN7,GETBIT(Copy_u8Command,3));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN6,GETBIT(Copy_u8Command,2));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN5,GETBIT(Copy_u8Command,1));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN4,GETBIT(Copy_u8Command,0));
+	/*enable pulse*/
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_HIGH);
+	_delay_ms(2);
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_LOW);
+	_delay_ms(2);
+#endif
+
 }
 
 /* send Data Function
@@ -46,6 +75,8 @@ void LCD_voidSendCommand(u8 Copy_u8Command)
  */
 void LCD_voidSendData(u8 Copy_u8Data)
 {
+	/*8bit mode*/
+#if LCD_MODE == LCD_8BitMode
 	/*RS==1 (high) for data*/
 	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_RS_PIN, DIO_u8PIN_HIGH);
 	/*RW==0 (low) for Write*/
@@ -54,14 +85,44 @@ void LCD_voidSendData(u8 Copy_u8Data)
 	DIO_u8SetPortValue(LCD_DATA_PORT, Copy_u8Data);
 	/*enable pulse*/
 	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_HIGH);
+	_delay_ms(2);
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_LOW);
+	_delay_ms(2);
+
+	/*4bit mode*/
+#elif LCD_MODE == LCD_4BitMode
+	/*RS==1 (high) for data*/
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_RS_PIN, DIO_u8PIN_HIGH);
+	/*RW==0 (low) for Write*/
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_RW_PIN, DIO_u8PIN_LOW);
+	/*higher data*/
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN7,GETBIT(Copy_u8Data,7));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN6,GETBIT(Copy_u8Data,6));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN5,GETBIT(Copy_u8Data,5));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN4,GETBIT(Copy_u8Data,4));
+	/*enable pulse*/
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_HIGH);
 	_delay_ms(1);
 	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_LOW);
 	_delay_ms(1);
+	/*lower data*/
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN7,GETBIT(Copy_u8Data,3));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN6,GETBIT(Copy_u8Data,2));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN5,GETBIT(Copy_u8Data,1));
+	DIO_u8SetPinValue(LCD_DATA_PORT, DIO_u8PIN4,GETBIT(Copy_u8Data,0));
+	/*enable pulse*/
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_HIGH);
+	_delay_ms(2);
+	DIO_u8SetPinValue(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_LOW);
+	_delay_ms(2);
+#endif
 }
 
 /*LCD initialization 8Bit Mode ,SET PORTS Direction*/
 void LCD_voidInit(void)
 {
+	/*8bit mode*/
+#if LCD_MODE == LCD_8BitMode
 	/*set LCD CTRL port and LCD data port to output*/
 	DIO_u8SetPinDirection(LCD_CTRL_PORT, LCD_RS_PIN, DIO_u8PIN_OUTPUT );
 	DIO_u8SetPinDirection(LCD_CTRL_PORT, LCD_RW_PIN, DIO_u8PIN_OUTPUT);
@@ -83,6 +144,40 @@ void LCD_voidInit(void)
 	_delay_ms(3);
 	/*Entry mode Set*/
 	LCD_voidSendCommand(0b00000110);
+
+	/*4bit mode*/
+#elif LCD_MODE == LCD_4BitMode
+	/*set LCD CTRL port and LCD data port to output*/
+	DIO_u8SetPinDirection(LCD_CTRL_PORT, LCD_RS_PIN, DIO_u8PIN_OUTPUT );
+	DIO_u8SetPinDirection(LCD_CTRL_PORT, LCD_RW_PIN, DIO_u8PIN_OUTPUT);
+	DIO_u8SetPinDirection(LCD_CTRL_PORT, LCD_E_PIN, DIO_u8PIN_OUTPUT);
+
+	DIO_u8SetPinDirection(LCD_DATA_PORT, DIO_u8PIN4, DIO_u8PIN_OUTPUT);
+	DIO_u8SetPinDirection(LCD_DATA_PORT, DIO_u8PIN5, DIO_u8PIN_OUTPUT);
+	DIO_u8SetPinDirection(LCD_DATA_PORT, DIO_u8PIN6, DIO_u8PIN_OUTPUT);
+	DIO_u8SetPinDirection(LCD_DATA_PORT, DIO_u8PIN7, DIO_u8PIN_OUTPUT);
+
+	/*lcd home*/
+	LCD_voidSendCommand(0b00000010);
+
+	/*delay for more than 30ms*/
+	_delay_ms(40);
+	/*set function, 2line , 5*7font*/
+	LCD_voidSendCommand(0b10000000);
+	/*delay for more than 39us*/
+	_delay_ms(1);
+	/*display ON/OF control*/
+	LCD_voidSendCommand(0b00001100);
+	/*delay for more than 39us*/
+	_delay_ms(1);
+	/*Display clear*/
+	LCD_voidSendCommand(DISPLAY_CLR);
+	/*delay for more than 2ms*/
+	_delay_ms(3);
+	/*Entry mode Set*/
+	LCD_voidSendCommand(0b01100000);
+#endif
+
 }
 
 /*print string*/
