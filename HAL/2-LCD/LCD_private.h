@@ -11,5 +11,6 @@
 
 #define LCD_8BitMode              8
 #define LCD_4BitMode              4
+u8 global_u8InitFinished         =0;
 
 #endif /* LCD_PRIVATE_H_ */

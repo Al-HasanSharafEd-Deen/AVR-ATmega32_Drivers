@@ -10,8 +10,8 @@
 #ifndef LCD_CONFIG_H_
 #define LCD_CONFIG_H_
 
-#define LCD_CTRL_PORT                  DIO_u8PORTB
-#define LCD_DATA_PORT                  DIO_u8PORTA
+#define LCD_CTRL_PORT                  DIO_u8PORTD
+#define LCD_DATA_PORT                  DIO_u8PORTC
 
 #define LCD_RS_PIN                     DIO_u8PIN0
 #define LCD_RW_PIN                     DIO_u8PIN1
@@ -22,6 +22,6 @@
  * to 4Bit: write LCD_4BitMode
  * to 8bit: write LCD-8BitMode
                                 */
-#define LCD_MODE				       LCD_8BitMode
+#define LCD_MODE				       LCD_4BitMode
 
 #endif /* LCD_CONFIG_H_ */
